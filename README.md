@@ -1,156 +1,141 @@
+# Toxicity & Abuse Detection – Offline AI Microservice
 
-# 🧪 Toxicity Detector API
-
-A machine learning-powered API that detects toxic, flagged, or safe text comments using logistic regression and a TF-IDF vectorizer. Built with **FastAPI**, configurable via `config.json`, and fully containerized with **Docker**.
-
----
-
-## 🚀 Features
-
-- ✅ Predicts toxicity from text input
-- ✅ Labels: `safe`, `flagged`, `toxic`
-- ✅ Returns reasons, confidence score, and action
-- ✅ Live API docs at `/docs` (Swagger UI)
-- ✅ Fully Dockerized for deployment
+This microservice detects toxic, abusive, or inappropriate language in user-generated text using a locally trained NLP model. It is fully offline, built using FastAPI, and deployable via Docker.
 
 ---
 
-## 🗂️ Project Structure
-
-```
-
-toxicity-detector/
-├── app/
-│   ├── main.py              # FastAPI app
-│   ├── classifier.py        # Prediction logic & model loader
-│   ├── config.json          # Thresholds for scoring
-├── models/
-│   └── model.pkl            # Trained ML model
-├── test\_samples/
-│   └── test\_api.py          # API test script
-├── requirements.txt         # Dependencies
-├── Dockerfile               # Docker config
-└── README.md                # Project description
-
-````
-
----
-
-## ⚙️ Requirements
-
-Install Python dependencies locally:
-
-```bash
-pip install -r requirements.txt
-````
-
----
- 
-## 🐳 Prerequisites
+##  Prerequisites
 
 - Python 3.10+ (for local runs)
 - Docker Desktop (for containerized runs)
  
- 
-## 🧪 Run Locally (No Docker)
 
-```bash
-uvicorn app.main:app --reload
-```
+##  Installation
 
-Then open:
+### 1. Clone the Project
 
-```
-http://127.0.0.1:8000/docs
-```
+git clone <your-repo-url>
+cd toxicity-detector
 
-Try the `/analyze-text` endpoint with a payload like:
 
-```json
-{
-  "user_id": "u1",
-  "post_id": "p1",
-  "text": "You are a fool and a loser"
-}
-```
+### 2. Build the Docker Image
 
----
 
-## 🧪 Test Locally
-
-Run the test script:
-
-bash
-python test_samples/test_api.py
-```
-
----
-
-## 🐳 Run with Docker
-
-### 1. Build the image:
-
-bash
 docker build -t toxicity-detector .
-```
 
-### 2. Run the container:
 
-bash
+### 4. Run the Container
+
+
 docker run -p 8000:8000 toxicity-detector
-```
 
-Then open in your browser:
 
-```
-http://127.0.0.1:8000/docs
-```
+Access API at: [http://localhost:8000/docs]
 
 ---
 
-## ⚙️ Configuration
+##  Model Details
 
-Edit thresholds in `app/config.json`:
+* Framework: Scikit-learn
+* Pipeline: TF-IDF Vectorizer + Logistic Regression
+* Model file: `app/model.pkl` (offline serialized)
+* Categories Detected: toxic, insult, harassment, obscene, identity attack, threat
 
-```json
+### Threshold Logic:
+
+| Score Range | Label   | Action   |
+| ----------- | ------- | -------- |
+| ≥ 0.75      | toxic   | blocked  |
+| 0.50 – 0.74 | flagged | flagged  |
+| < 0.50      | safe    | approved |
+
+### Configuration File (`config.json`):
+
+json
 {
+  "toxicity_threshold": 0.75,
   "flag_threshold": 0.5,
-  "toxicity_threshold": 0.75
+  "enabled_categories": ["toxic", "insult", "harassment"]
 }
-```
 
-Reload them without restarting:
-
-```http
-POST /reload-config
-```
 
 ---
 
-## 📊 Response Example
+##  Testing
 
-```json
+### 1. API Test Script
+
+Run:
+
+
+python test_samples/test_api.py
+
+
+This script:
+
+* Sends 3 predefined inputs to `/analyze-text`
+* Prints expected vs actual labels
+* Validates model logic
+
+Example output:
+
+
+Text: You're stupid and worthless
+Expected: toxic | Predicted: toxic
+---
+Text: Thank you for the feedback. It was helpful.
+Expected: safe | Predicted: safe
+
+
+### 2. Manual Test via Swagger UI
+
+Visit [http://localhost:8000/docs], try:
+
+
 {
-  "user_id": "u1",
-  "post_id": "p1",
-  "toxicity_score": 0.83,
+  "user_id": "test01",
+  "post_id": "p001",
+  "text": "You're pathetic and dumb"
+}
+
+
+Response:
+
+
+{
+  "user_id": "test01",
+  "post_id": "p001",
+  "toxicity_score": 0.91,
   "label": "toxic",
   "action": "blocked",
-  "reasons": ["toxic"],
+  "reasons": ["insult", "harassment"],
   "threshold": 0.75
 }
-```
+
+
+
+
+##  Files
+
+* `app/main.py`: FastAPI endpoints
+* `app/classifier.py`: Preprocessing + inference
+* `app/model.pkl`: Offline trained model
+* `app/config.json`: Threshold and label settings
+* `test_samples/test_api.py`: API test script
+* `Dockerfile`: Offline deployment setup
 
 ---
 
-## 📞 Endpoints Summary
+##  Summary
 
-| Method | Endpoint         | Description         |
-| ------ | ---------------- | ------------------- |
-| GET    | `/health`        | Health check        |
-| GET    | `/version`       | Returns version     |
-| POST   | `/analyze-text`  | Detects toxicity    |
-| POST   | `/reload-config` | Reloads config live |
+| Requirement       | Status                                  |
+| ----------------- | --------------------------------------- |
+| Offline support   | ✅ Fully Offline           |
+| FastAPI endpoints | ✅ /analyze-text, /health, /version      |
+| Dockerized        | ✅ Ready for containerized deployment    |
+| Configurable      | ✅ Supports thresholds and label filters |
+| Model             | ✅ TF-IDF + LogisticRegression           |
 
----
+
+
 

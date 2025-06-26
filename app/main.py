@@ -11,13 +11,11 @@ app = FastAPI(
     description="Detect toxic or safe text with a configurable ML model."
 )
 
-# --- Input schema ---
 class PostInput(BaseModel):
     user_id: str
     post_id: str
     text: str
 
-# --- Output schema ---
 class PredictionOutput(BaseModel):
     user_id: str
     post_id: str
@@ -27,7 +25,6 @@ class PredictionOutput(BaseModel):
     reasons: list
     threshold: float
 
-# --- Exception handler (optional) ---
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     return JSONResponse(
@@ -35,17 +32,14 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         content={"error": "Invalid input", "details": exc.errors()}
     )
 
-# --- Health check ---
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
 
-# --- Version info ---
 @app.get("/version")
 def get_version():
     return {"version": "1.0.0"}
 
-# --- Main toxicity check ---
 @app.post("/analyze-text", response_model=PredictionOutput)
 def analyze_text(input: PostInput):
     result = predict_toxicity(input.text)
@@ -55,7 +49,6 @@ def analyze_text(input: PostInput):
         **result
     }
 
-# --- Reload config without restarting ---
 @app.post("/reload-config")
 def reload():
     reload_config()
