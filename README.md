@@ -14,8 +14,8 @@ This microservice detects toxic, abusive, or inappropriate language in user-gene
 
 ### 1. Clone the Project
 
-git clone <your-repo-url>
-cd toxicity-detector
+git clone <https://github.com/Aparna2320/Toxicity-detection.git>
+cd Toxicity-detection
 
 
 ### 2. Build the Docker Image
@@ -130,11 +130,11 @@ Response:
 
 | Requirement       | Status                                  |
 | ----------------- | --------------------------------------- |
-| Offline support   | ✅ Fully Offline           |
-| FastAPI endpoints | ✅ /analyze-text, /health, /version      |
-| Dockerized        | ✅ Ready for containerized deployment    |
-| Configurable      | ✅ Supports thresholds and label filters |
-| Model             | ✅ TF-IDF + LogisticRegression           |
+| Offline support   |  Fully Offline           |
+| FastAPI endpoints |  /analyze-text, /health, /version      |
+| Dockerized        |  Ready for containerized deployment    |
+| Configurable      |  Supports thresholds and label filters |
+| Model             |  TF-IDF + LogisticRegression           |
 
 
 
