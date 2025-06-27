@@ -2,7 +2,7 @@
 
 This microservice detects toxic, abusive, or inappropriate language in user-generated text using a locally trained NLP model. It is fully offline, built using FastAPI, and deployable via Docker.
 
----
+
 
 ##  Prerequisites
 
