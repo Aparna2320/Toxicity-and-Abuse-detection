@@ -14,7 +14,7 @@ This microservice detects toxic, abusive, or inappropriate language in user-gene
 
 ### 1. Clone the Project
 
-git clone <https://github.com/Aparna2320/Toxicity-detection.git>
+git clone <https://github.com/Aparna2320/Toxicity-and-Abuse-detection>
 cd Toxicity-detection
 
 
