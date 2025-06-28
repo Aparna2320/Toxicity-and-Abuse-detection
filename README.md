@@ -67,6 +67,7 @@ json
 
 Run:
 
+uvicorn app.main:app --reload
 
 python test_samples/test_api.py
 
