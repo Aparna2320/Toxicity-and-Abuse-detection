@@ -32,7 +32,7 @@ docker run -p 8000:8000 toxicity-detector
 
 Access API at: [http://localhost:8000/docs]
 
----
+
 
 ##  Model Details
 
